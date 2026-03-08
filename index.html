@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONE PIECE TCG - Collection Manager</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Splash Screen / Loading Page -->
+    <div id="splash-screen" class="splash-screen active">
+        <div class="splash-container">
+            <!-- Animated Background -->
+            <div class="splash-bg-particles"></div>
+            
+            <!-- Main Content -->
+            <div class="splash-content">
+                <!-- Title "ONE PEZZO" - Centered Above Logo -->
+                <h1 class="splash-title splash-title-centered">
+                    <span class="title-word" data-text="ONE">ONE</span>
+                    <span class="title-word" data-text="PEZZO">PEZZO</span>
+                </h1>
+                
+                <!-- Loading Bar with Animated Bones -->
+                <div class="splash-loading-container">
+                    <div class="splash-loading-bar">
+                        <div class="splash-loading-fill" id="splash-loading-fill">
+                            <!-- Animated Bones -->
+                            <div class="loading-bone bone-1">🦴</div>
+                            <div class="loading-bone bone-2">🦴</div>
+                            <div class="loading-bone bone-3">🦴</div>
+                        </div>
+                    </div>
+                    <div class="splash-loading-text">
+                        <span id="splash-percentage">0</span>%
+                    </div>
+                </div>
+                
+                <!-- Subtitle -->
+                <p class="splash-subtitle">Collection Manager</p>
+            </div>
+        </div>
+    </div>
+    
+    <div id="app">
+        <!-- Modern Navigation Header -->
+        <header class="modern-header">
+            <div class="header-container">
+                <!-- Logo Section -->
+                <div class="header-logo">
+                    <div class="logo-icon">🏴‍☠️</div>
+                    <span class="logo-text">ONE PIECE TCG</span>
+                </div>
+
+                <!-- Navigation Menu -->
+                <nav class="header-nav">
+                    <a href="#" class="nav-link" data-page="explore">Explore</a>
+                    <a href="#" class="nav-link active" data-page="sets">Sets</a>
+                    <a href="#" class="nav-link" data-page="shop">Shop</a>
+                    <a href="#" class="nav-link" data-page="portfolio">Portfolio</a>
+                    <a href="#" class="nav-link" data-page="vinted">🏷️ Vinted</a>
+                    <a href="#" class="nav-link" data-page="showcase">Showcase</a>
+                </nav>
+
+
+                <!-- Header Actions -->
+                <div class="header-actions">
+                    <button class="action-btn search-btn" title="Search">
+                        <span class="search-icon">🔍</span>
+                    </button>
+                    <div class="separator"></div>
+                    
+                    <!-- Currency Selector -->
+                    <select class="currency-selector" id="currency-selector" title="Select Currency">
+                        <option value="USD">$ USD</option>
+                        <option value="EUR">€ EUR</option>
+                        <option value="GBP">£ GBP</option>
+                        <option value="JPY">¥ JPY</option>
+                    </select>
+                    <div class="separator"></div>
+                    
+                    <button class="action-btn theme-btn" title="Toggle Theme">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <div class="separator"></div>
+                    <button class="action-btn stats-btn" title="Statistics">
+                        <span class="stats-icon">📊</span>
+                        <span class="stats-badge" id="header-owned-count">0</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Page: Sets Selection -->
+            <div id="page-sets" class="page active">
+                <div class="page-header">
+                    <h1>Trading Card Games</h1>
+                    <p class="page-subtitle">Select a game to manage your collection</p>
+                </div>
+                
+                <div class="sets-grid">
+                    <div class="set-card" data-set="one-piece">
+                        <div class="set-card-image">
+                            <div class="set-placeholder">
+                                <span class="set-emoji">🏴‍☠️</span>
+                            </div>
+                        </div>
+                        <div class="set-card-info">
+                            <h3>ONE PIECE</h3>
+                            <p class="set-card-stats">
+                                <span id="set-total-cards">0 cards</span>
+                                <span class="dot">•</span>
+                                <span id="set-owned-cards">0 owned</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page: Language Selection -->
+            <div id="page-languages" class="page hidden">
+                <div class="page-header">
+                    <button class="back-btn" data-back="sets">
+                        <span>←</span> Back to Sets
+                    </button>
+                    <h1>Select Language</h1>
+                    <p class="page-subtitle">Choose your preferred language for ONE PIECE TCG</p>
+                </div>
+
+                <div class="languages-grid">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Page: Expansions Grid -->
+            <div id="page-expansions" class="page hidden">
+                <div class="page-header">
+                    <button class="back-btn" data-back="sets">
+                        <span>←</span> Back to Sets
+                    </button>
+                    <h1 id="expansions-title">Expansions</h1>
+                    <p class="page-subtitle" id="expansions-subtitle"></p>
+                </div>
+
+                <!-- Language Tabs -->
+                <div class="language-tabs-container">
+                    <div class="language-tabs" id="language-tabs">
+                        <!-- Tabs generated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="expansion-search" class="search-input" placeholder="Search expansions...">
+                    </div>
+                </div>
+
+                <div class="expansions-grid">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Page: Cards View -->
+            <div id="page-cards" class="page hidden">
+                <div class="page-header">
+                    <button class="back-btn" data-back="expansions">
+                        <span>←</span> Back to Expansions
+                    </button>
+                    <h1 id="cards-title">Cards</h1>
+                    <p class="page-subtitle" id="cards-subtitle"></p>
+                </div>
+
+                <!-- Cards Filters -->
+                <div class="cards-filters">
+                    <div class="filter-group">
+                        <input type="text" id="cards-search" class="search-input" placeholder="Search cards by name or ID...">
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn" id="filter-all" data-filter="all">
+                            All Cards <span class="filter-count" id="count-all">0</span>
+                        </button>
+                        <button class="filter-btn" id="filter-owned" data-filter="owned">
+                            Owned <span class="filter-count" id="count-owned">0</span>
+                        </button>
+                        <button class="filter-btn" id="filter-missing" data-filter="missing">
+                            Missing <span class="filter-count" id="count-missing">0</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Cards Grid -->
+                <div id="cards-container" class="cards-grid">
+                    <!-- Populated dynamically -->
+                </div>
+
+                <!-- Loading State -->
+                <div id="cards-loading" class="loading-state hidden">
+                    <div class="loading-spinner"></div>
+                    <p>Loading cards...</p>
+                </div>
+
+                <!-- Empty State -->
+                <div id="cards-empty" class="empty-state hidden">
+                    <span class="empty-icon">🔍</span>
+                    <p>No cards found</p>
+                </div>
+            </div>
+
+            <!-- Page: Portfolio -->
+            <div id="page-portfolio" class="page hidden">
+                <div class="page-header">
+                    <h1>📊 Portfolio</h1>
+                    <p class="page-subtitle">Track your collection's value and performance over time</p>
+                </div>
+
+                <!-- Portfolio Summary Stats -->
+                <div class="portfolio-stats-grid">
+                    <div class="portfolio-stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total Value</div>
+                            <div class="stat-value" id="portfolio-total-value">$0.00</div>
+                            <div class="stat-change positive" id="portfolio-value-change">+0.00%</div>
+                        </div>
+                    </div>
+                    <div class="portfolio-stat-card">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-content">
+                            <div class="stat-label">7-Day Change</div>
+                            <div class="stat-value" id="portfolio-week-change">$0.00</div>
+                            <div class="stat-change" id="portfolio-week-percent">0.00%</div>
+                        </div>
+                    </div>
+                    <div class="portfolio-stat-card">
+                        <div class="stat-icon">🎴</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Cards Owned</div>
+                            <div class="stat-value" id="portfolio-cards-count">0</div>
+                            <div class="stat-subtext" id="portfolio-unique-count">0 unique</div>
+                        </div>
+                    </div>
+                    <div class="portfolio-stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Top Card Value</div>
+                            <div class="stat-value" id="portfolio-top-value">$0.00</div>
+                            <div class="stat-subtext" id="portfolio-top-card">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="portfolio-charts-section">
+                    <h2>📊 Performance Charts</h2>
+                    <div class="charts-grid">
+                        <!-- Total Value Chart -->
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <h3>Total Portfolio Value</h3>
+                                <div class="chart-timeframe-selector">
+                                    <button class="timeframe-btn active" data-timeframe="7d">7D</button>
+                                    <button class="timeframe-btn" data-timeframe="30d">30D</button>
+                                    <button class="timeframe-btn" data-timeframe="90d">90D</button>
+                                    <button class="timeframe-btn" data-timeframe="1y">1Y</button>
+                                    <button class="timeframe-btn" data-timeframe="all">ALL</button>
+                                </div>
+                            </div>
+                            <canvas id="value-chart"></canvas>
+                        </div>
+
+                        <!-- Growth Percentage Chart -->
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <h3>Growth Percentage</h3>
+                                <div class="chart-timeframe-selector">
+                                    <button class="timeframe-btn active" data-timeframe="7d">7D</button>
+                                    <button class="timeframe-btn" data-timeframe="30d">30D</button>
+                                    <button class="timeframe-btn" data-timeframe="90d">90D</button>
+                                    <button class="timeframe-btn" data-timeframe="1y">1Y</button>
+                                    <button class="timeframe-btn" data-timeframe="all">ALL</button>
+                                </div>
+                            </div>
+                            <canvas id="growth-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Owned Cards Section -->
+                <div class="portfolio-cards-section">
+                    <div class="section-header">
+                        <h2>🎴 Your Collection</h2>
+                        <div class="cards-count-badge" id="portfolio-cards-badge">0 cards</div>
+                    </div>
+
+                    <!-- Cards Filters -->
+                    <div class="portfolio-cards-filters">
+                        <div class="filter-search">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="portfolio-search" class="search-input" placeholder="Search by card name or ID...">
+                        </div>
+                        
+                        <div class="filter-controls">
+                            <label for="portfolio-sort">Sort by:</label>
+                            <select id="portfolio-sort" class="sort-selector">
+                                <option value="value-desc">Value (High to Low)</option>
+                                <option value="value-asc">Value (Low to High)</option>
+                                <option value="name-asc">Name (A-Z)</option>
+                                <option value="name-desc">Name (Z-A)</option>
+                                <option value="quantity-desc">Quantity (High to Low)</option>
+                                <option value="date-desc">Recently Added</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-controls">
+                            <label for="portfolio-language">Language:</label>
+                            <select id="portfolio-language" class="sort-selector">
+                                <option value="all">All Languages</option>
+                                <option value="ENG">English</option>
+                                <option value="JAP">Japanese</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Cards Grid -->
+                    <div id="portfolio-cards-grid" class="portfolio-cards-grid">
+                        <!-- Populated dynamically by JavaScript -->
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="portfolio-empty" class="empty-state hidden">
+                        <span class="empty-icon">📦</span>
+                        <p>No cards in your collection yet</p>
+                        <p class="empty-subtext">Start adding cards to see your portfolio value</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Page: Vinted Stock Manager -->
+            <div id="page-vinted" class="page hidden">
+                <div class="page-header">
+                    <h1>🏷️ Vinted Stock Manager</h1>
+                    <p class="page-subtitle">Gestisci le tue inserzioni Vinted e monitora lo stock</p>
+                </div>
+
+                <!-- Vinted Summary Bar -->
+                <div class="vinted-summary-bar">
+                    <div class="vinted-stat">
+                        <span class="vinted-stat-value" id="vinted-stat-active">0</span>
+                        <span class="vinted-stat-label">Inserzioni attive</span>
+                    </div>
+                    <div class="vinted-stat">
+                        <span class="vinted-stat-value" id="vinted-stat-sold">0</span>
+                        <span class="vinted-stat-label">Vendute</span>
+                    </div>
+                    <div class="vinted-stat">
+                        <span class="vinted-stat-value" id="vinted-stat-revenue">€0.00</span>
+                        <span class="vinted-stat-label">Guadagno totale</span>
+                    </div>
+                    <div class="vinted-stat">
+                        <span class="vinted-stat-value" id="vinted-stat-stock-value">€0.00</span>
+                        <span class="vinted-stat-label">Valore in vendita</span>
+                    </div>
+                    <div class="vinted-actions-bar">
+                        <button class="vinted-sync-btn" id="vinted-sync-btn" title="Sincronizza con Vinted per aggiornare gli stati">
+                            🔄 Sincronizza Vinted
+                        </button>
+                        <button class="vinted-add-btn" id="vinted-add-btn">
+                            + Nuova Inserzione
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Vinted Filters -->
+                <div class="vinted-filters">
+                    <div class="vinted-filter-tabs">
+                        <button class="vinted-tab active" data-status="all">Tutte</button>
+                        <button class="vinted-tab" data-status="active">🟢 Attive</button>
+                        <button class="vinted-tab" data-status="sold">✅ Vendute</button>
+                        <button class="vinted-tab" data-status="removed">🗑️ Rimosse</button>
+                    </div>
+                    <div class="vinted-search-box">
+                        <span>🔍</span>
+                        <input type="text" id="vinted-search" class="search-input" placeholder="Cerca per nome carta o ID...">
+                    </div>
+                </div>
+
+                <!-- Vinted Listings Grid -->
+                <div id="vinted-listings-container" class="vinted-listings-grid">
+                    <!-- Populated dynamically -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="vinted-empty" class="empty-state hidden">
+                    <span class="empty-icon">🏷️</span>
+                    <p>Nessuna inserzione Vinted</p>
+                    <p class="empty-subtext">Clicca "+ Nuova Inserzione" per aggiungerne una</p>
+                </div>
+            </div>
+
+            <!-- Vinted Add/Edit Modal -->
+            <div id="vinted-modal" class="modal hidden">
+                <div class="modal-overlay"></div>
+                <div class="modal-content vinted-modal-content">
+                    <button class="modal-close" id="vinted-modal-close">&times;</button>
+                    <div class="vinted-modal-body">
+                        <h2 id="vinted-modal-title">Nuova Inserzione Vinted</h2>
+
+                        <!-- Vinted URL -->
+                        <div class="vinted-form-group">
+                            <label>🔗 Link Inserzione Vinted</label>
+                            <div class="vinted-url-row">
+                                <input type="url" id="vinted-listing-url" class="link-input" placeholder="https://www.vinted.com/items/...">
+                                <button class="btn-link-open" id="vinted-url-open" title="Apri nel browser" disabled>🔗</button>
+                            </div>
+                        </div>
+
+                        <!-- Status (solo in edit) -->
+                        <div class="vinted-form-group" id="vinted-status-group" style="display:none">
+                            <label>📌 Stato</label>
+                            <select id="vinted-listing-status" class="sort-selector">
+                                <option value="active">🟢 Attiva</option>
+                                <option value="sold">✅ Venduta</option>
+                                <option value="removed">🗑️ Rimossa</option>
+                            </select>
+                        </div>
+
+                        <!-- Lista carte multi-item -->
+                        <div class="vinted-form-group">
+                            <label>🎴 Carte nell'inserzione</label>
+
+                            <!-- Search bar per aggiungere carte -->
+                            <div class="vinted-card-selector" id="vinted-card-selector-wrap">
+                                <input type="text" id="vinted-card-search-input" class="search-input" placeholder="Cerca carta da aggiungere...">
+                                <div id="vinted-card-search-results" class="vinted-card-search-results hidden"></div>
+                            </div>
+
+                            <!-- Righe carte aggiunte -->
+                            <div id="vinted-items-list" class="vinted-items-list"></div>
+
+                            <!-- Riga totale -->
+                            <div class="vinted-total-row">
+                                <span class="vinted-total-label">💶 Totale inserzione</span>
+                                <div class="vinted-total-input-wrap">
+                                    <span class="vinted-total-prefix">€</span>
+                                    <input type="number" id="vinted-listing-total" class="quantity-input vinted-total-input" value="0" min="0" step="0.01" placeholder="0.00">
+                                    <button class="vinted-recalc-btn" id="vinted-recalc-btn" title="Ricalcola dalla somma">↺</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hidden ID field for edit -->
+                        <input type="hidden" id="vinted-listing-id">
+
+                        <div class="vinted-modal-actions">
+                            <button class="btn-secondary" id="vinted-modal-cancel">Annulla</button>
+                            <button class="btn-primary" id="vinted-modal-save">💾 Salva</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Page: Welcome (Initial State) -->
+            <div id="page-welcome" class="page hidden">
+                <div class="welcome-container">
+                    <div class="welcome-content">
+                        <span class="welcome-icon">🏴‍☠️</span>
+                        <h2>Welcome to ONE PIECE TCG Collection Manager</h2>
+                        <p>Select your database folder to start managing your collection</p>
+                        <button id="welcome-select-btn" class="btn-primary btn-large">
+                            📁 Select Database Folder
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Statistics Panel (Slide-out) -->
+        <div id="stats-panel" class="stats-panel hidden">
+            <div class="stats-panel-header">
+                <h2>📊 Collection Statistics</h2>
+                <button class="stats-panel-close">&times;</button>
+            </div>
+            <div class="stats-panel-content">
+                <div class="stat-card">
+                    <div class="stat-label">Total Cards in Database</div>
+                    <div class="stat-value" id="stat-total-db">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Cards Owned</div>
+                    <div class="stat-value" id="stat-total-owned">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Unique Cards Owned</div>
+                    <div class="stat-value" id="stat-unique-owned">0</div>
+                </div>
+                <div class="stat-card highlight">
+                    <div class="stat-label">Collection Completion</div>
+                    <div class="stat-value" id="stat-completion">0%</div>
+                    <div class="stat-progress">
+                        <div class="stat-progress-bar" id="stat-progress-bar"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Database Path</div>
+                    <div class="stat-path" id="stat-db-path">Not selected</div>
+                </div>
+                <button id="change-db-btn" class="btn-secondary">
+                    📁 Change Database Folder
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card Detail Modal -->
+    <div id="card-modal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-body">
+                <div class="modal-image">
+                    <!-- 3D Holographic card structure generated dynamically -->
+                </div>
+                <div class="modal-info">
+                    <h2 id="modal-card-name">Card Name</h2>
+                    
+                    <!-- Quantity Controls -->
+                    <div class="quantity-controls">
+                        <label>Quantity Owned:</label>
+                        <div class="quantity-input-group">
+                            <button class="btn-quantity" data-action="decrease">-</button>
+                            <input type="number" id="modal-quantity" class="quantity-input" value="0" min="0" max="99">
+                            <button class="btn-quantity" data-action="increase">+</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Base Information & Statistics - Two Columns -->
+                    <div class="modal-section modal-two-columns">
+                        <!-- Left Column: Base Information -->
+                        <div class="modal-column">
+                            <h3>📋 Base Information</h3>
+                            <div class="modal-details">
+                                <p><strong>ID:</strong> <span id="modal-card-id"></span></p>
+                                <p><strong>Type:</strong> <span id="modal-card-type"></span></p>
+                                <p><strong>Rarity:</strong> <span id="modal-card-rarity"></span></p>
+                                <p><strong>Set:</strong> <span id="modal-card-set"></span></p>
+                                <p><strong>Language:</strong> <span id="modal-card-language"></span></p>
+                                
+                                <!-- Special Abilities -->
+                                <div id="modal-abilities-section" class="hidden">
+                                    <strong>Special Abilities:</strong>
+                                    <span id="modal-abilities-list"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Column: Statistics & Details -->
+                        <div class="modal-column" id="modal-stats-section">
+                            <h3>📊 Statistics & Details</h3>
+                            <div class="modal-details">
+                                <p id="modal-life-row" class="hidden"><strong>Life:</strong> <span id="modal-card-life"></span></p>
+                                <p id="modal-cost-row" class="hidden"><strong>Cost:</strong> <span id="modal-card-cost"></span></p>
+                                <p id="modal-power-row" class="hidden"><strong>Power:</strong> <span id="modal-card-power"></span></p>
+                                <p id="modal-counter-row" class="hidden"><strong>Counter:</strong> <span id="modal-card-counter"></span></p>
+                                <p><strong>Attribute:</strong> <span id="modal-card-attribute"></span></p>
+                                <p><strong>Color(s):</strong> <span id="modal-card-colors"></span></p>
+                                <p><strong>Types:</strong> <span id="modal-card-types"></span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Effects & Special Abilities -->
+                    <div class="modal-section" id="modal-effect-section">
+                        <h3>✨ Effects & Abilities</h3>
+                        <div class="modal-details">
+                            <p id="modal-effect-row" class="hidden"><strong>Effect:</strong><br><span id="modal-card-effect" class="effect-text"></span></p>
+                            <p id="modal-trigger-row" class="hidden"><strong>Trigger:</strong><br><span id="modal-card-trigger" class="effect-text"></span></p>
+                        </div>
+                    </div>
+
+                    <!-- Marketplace Links -->
+                    <div class="modal-section" id="modal-links-section">
+                        <h3>🛒 Marketplace Links</h3>
+                        <div class="modal-links">
+                            <div class="link-row">
+                                <div class="link-icon cardmarket-icon">CM</div>
+                                <input type="url" id="modal-link-cardmarket" class="link-input" placeholder="Paste Cardmarket URL...">
+                                <button class="btn-link-open" id="btn-open-cardmarket" title="Open in browser" disabled>🔗</button>
+                                <button class="btn-link-save" id="btn-save-cardmarket" title="Save link">💾</button>
+                            </div>
+                            <div class="link-row">
+                                <div class="link-icon tcgplayer-icon">TCG</div>
+                                <input type="url" id="modal-link-tcgplayer" class="link-input" placeholder="Paste TCGPlayer URL...">
+                                <button class="btn-link-open" id="btn-open-tcgplayer" title="Open in browser" disabled>🔗</button>
+                                <button class="btn-link-save" id="btn-save-tcgplayer" title="Save link">💾</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cardmarket Pricing Section -->
+                    <div class="modal-section hidden" id="modal-pricing-section">
+                        <h3>💰 Cardmarket Prices</h3>
+                        
+                        <!-- Loading state -->
+                        <div id="pricing-loading" class="pricing-loading hidden">
+                            <div class="loading-spinner-small"></div>
+                            <span>Fetching prices from Cardmarket...</span>
+                        </div>
+
+                        <!-- Price Info Grid -->
+                        <div id="pricing-info" class="pricing-info-grid hidden">
+                            <div class="pricing-card">
+                                <div class="pricing-label">📈 Tendenza</div>
+                                <div class="pricing-value" id="pricing-trend">-</div>
+                            </div>
+                            <div class="pricing-card">
+                                <div class="pricing-label">📊 Media 30g</div>
+                                <div class="pricing-value" id="pricing-avg30">-</div>
+                            </div>
+                            <div class="pricing-card">
+                                <div class="pricing-label">📅 Media 7g</div>
+                                <div class="pricing-value" id="pricing-avg7">-</div>
+                            </div>
+                            <div class="pricing-card">
+                                <div class="pricing-label">📌 Media 1g</div>
+                                <div class="pricing-value" id="pricing-avg1">-</div>
+                            </div>
+                            <div class="pricing-card">
+                                <div class="pricing-label">🏷️ Da</div>
+                                <div class="pricing-value" id="pricing-from">-</div>
+                            </div>
+                            <div class="pricing-card">
+                                <div class="pricing-label">📦 Disponibili</div>
+                                <div class="pricing-value" id="pricing-available">-</div>
+                            </div>
+                        </div>
+
+                        <!-- Price Chart -->
+                        <div id="pricing-chart-container" class="pricing-chart-container hidden">
+                            <div class="pricing-timerange-bar">
+                                <button class="pricing-range-btn active" data-range="cm">CM</button>
+                                <span class="pricing-range-divider"></span>
+                                <button class="pricing-range-btn" data-range="1w">1W</button>
+                                <button class="pricing-range-btn" data-range="1m">1M</button>
+                                <button class="pricing-range-btn" data-range="3m">3M</button>
+                                <button class="pricing-range-btn" data-range="6m">6M</button>
+                                <button class="pricing-range-btn" data-range="1y">1Y</button>
+                                <button class="pricing-range-btn" data-range="all">ALL</button>
+                            </div>
+                            <canvas id="modal-price-chart"></canvas>
+                        </div>
+
+                        <!-- Last fetched info -->
+                        <div id="pricing-footer" class="pricing-footer hidden">
+                            <span id="pricing-last-fetched">Last fetched: -</span>
+                            <button class="btn-refresh-prices" id="btn-refresh-prices" title="Refresh prices">🔄 Refresh</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>

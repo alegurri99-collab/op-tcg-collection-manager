@@ -1,0 +1,72 @@
+{
+  "name": "op-tcg-collection-manager",
+  "version": "1.0.0",
+  "description": "ONE PIECE TCG Collection Manager - Gestisci la tua collezione di carte",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --remote-debugging-port=9222",
+    "build": "electron-builder",
+    "build:full": "electron-builder && node scripts/build-data.js"
+  },
+  "keywords": [
+    "one-piece",
+    "tcg",
+    "collection",
+    "cards",
+    "electron"
+  ],
+  "author": "Lorenzo",
+  "license": "MIT",
+  "build": {
+    "appId": "com.lorenzo.op-tcg-collection-manager",
+    "productName": "OP TCG Collection Manager",
+    "asar": true,
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "alegurri99-collab",
+        "repo": "op-tcg-collection-manager"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "forceCodeSigning": false,
+      "signingHashAlgorithms": null,
+      "sign": null
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "OP TCG Collection Manager"
+    },
+    "files": [
+      "**/*",
+      "!node_modules/.cache",
+      "!Backups/**",
+      "!**/*.map",
+      "!scripts/**"
+    ],
+    "directories": {
+      "output": "dist"
+    }
+  },
+  "devDependencies": {
+    "archiver": "^7.0.1",
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.6.2",
+    "electron-updater": "^6.3.9"
+  }
+}
