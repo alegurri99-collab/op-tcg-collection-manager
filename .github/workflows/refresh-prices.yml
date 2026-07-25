@@ -1,0 +1,32 @@
+name: Refresh prices index (R2)
+
+# Rigenera downloads/prices-index.json leggendo /sharedPrices da Firestore
+# e lo ricarica su Cloudflare R2, così il Portfolio dell'app non dipende più
+# dal refresh manuale da dev. Gira ogni 6 ore, indipendente dall'app.
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'   # ogni 6 ore, in UTC
+  workflow_dispatch: {}       # permette anche l'avvio manuale da GitHub UI
+
+jobs:
+  refresh-prices:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run prices refresh
+        env:
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
+          R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
+        run: node scripts/prices-r2.js
