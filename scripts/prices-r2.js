@@ -322,7 +322,14 @@ async function addCardtraderPrices(pricesIndex, log) {
         const blueprintId = extractCardtraderBlueprintId(links[cardKey]);
         const ctLang = ctLanguageFromCardKey(cardKey);
         const key = `${cardKey}:cardtrader`;
-        const prevEntry = previous[key];
+        // Base storico: il maggiore tra R2 (previous run di QUESTO script) e
+        // Firestore (pricesIndex[key], appena scritto dalla Fase 1 sopra — include
+        // lo storico completo salvato dal client, es. da una migrazione one-off).
+        // Senza questo confronto, la Fase 2 sovrascriveva sempre con R2 (spesso più
+        // corto o assente la prima volta), perdendo storico già presente su Firestore.
+        const r2Prev = previous[key];
+        const fsPrev = pricesIndex[key];
+        const prevEntry = (fsPrev?.chartLabels?.length || 0) >= (r2Prev?.chartLabels?.length || 0) ? fsPrev : r2Prev;
 
         if (!blueprintId || !ctLang) { skipped++; continue; }
 
