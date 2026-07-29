@@ -2,11 +2,11 @@ name: Refresh prices index (R2)
 
 # Rigenera downloads/prices-index.json leggendo /sharedPrices da Firestore
 # e lo ricarica su Cloudflare R2, così il Portfolio dell'app non dipende più
-# dal refresh manuale da dev. Gira ogni 6 ore, indipendente dall'app.
+# dal refresh manuale da dev. Gira ogni 12 ore, indipendente dall'app.
 
 on:
   schedule:
-    - cron: '0 */6 * * *'   # ogni 6 ore, in UTC
+    - cron: '0 */12 * * *'  # ogni 12 ore, in UTC
   workflow_dispatch: {}       # permette anche l'avvio manuale da GitHub UI
 
 jobs:
